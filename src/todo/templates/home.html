@@ -2,10 +2,140 @@
 
 {% block content %}
 
+<script>
+    let data = {{ data | tojson | safe }}
+</script>
+
 <div class="columns is-centered">
     <div class="column is-8">
-        Hi
+        <h3 class="title is-3">Changing Room Coding Challenge</h3>
+        <p class="subtitle">Just Another To-Do List</p>
     </div>
 </div>
+
+<div class="columns is-centered">
+    <div class="column is-8">
+        <article class="message is-link">
+            <div class="message-body">
+                Note that if you restart the server, <strong>it will not save your changes!</strong> <br>
+                Here is three lines of sample data to play around with.
+            </div>
+        </article>
+    </div>
+</div>
+
+<div class="columns is-centered">
+    <div class="column is-8">
+        <div class="buttons is-right">
+            <button class="button is-primary" id="new-task" data-target="modal-js-example">New Task</button>
+        </div>
+    </div>
+</div>
+
+<div class="columns is-centered">
+    <div class="column is-8">
+        <div class="table-container">
+            <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+                <thead>
+                <tr>
+                    <th></th>
+                    <th>Task</th>
+                    <th>Deadline</th>
+                    <th>Finished?</th>
+                </tr>
+                </thead>
+                <tbody id="tbody-empty">
+                {% for key, value in data.items() %}
+                    <tr>
+                        <td>
+                            <button class="button is-warning is-small edit-button" id="edit-{{value['id']}}">Edit</button>
+                        </td>
+                        <td id="name-{{value['id']}}">{{ value["name"] }}</td>
+                        <td id="deadline-{{value['id']}}">{{ value["deadline"] }}</td>
+                        <td>
+                            <label class="checkbox">
+                                <input type="checkbox" id="finish-{{value['id']}}" class="finish-checkbox">
+                            </label>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="{{ url_for('static', filename = 'home.js') }}"></script>
+
+
+
+<div class="modal" id="insertTaskModal">
+    <div class="modal-background"></div>
+
+    <div class="modal-card">
+    <header class="modal-card-head">
+        <p class="modal-card-title">Insert a New Task</p>
+        <button class="delete" aria-label="close" data-bulma-modal="close"></button>
+    </header>
+    <section class="modal-card-body">
+        <form id="insert-new">
+            <div class="field">
+                <label class="label" for="task-name">Task Name:</label>
+                <div class="control">
+                    <input class="input" type="text" placeholder="Task Name, e.g.: Essay" name="task-name" id="task-name">
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label" for="due-date">Due Date:</label>
+                <div class="control">
+                    <input class="input" type="text" placeholder="Deadline, e.g.: 2022-09-01" name="due-date" id="due-date">
+                </div>
+                <p class="help">You must follow exactly the YYYY-MM-DD format. The program doesn't do error-checking!</p>
+            </div>
+        </form>
+    </section>
+    <footer class="modal-card-foot">
+        <button class="button is-success" id="save-new-task">Save A New Task</button>
+        <button class="button" data-bulma-modal="close">Cancel</button>
+    </footer>
+    </div>
+</div>
+
+
+<div class="modal" id="editTaskModal">
+    <div class="modal-background"></div>
+
+    <div class="modal-card">
+    <header class="modal-card-head">
+        <p class="modal-card-title">Update Task</p>
+        <button class="delete" aria-label="close" data-bulma-modal="close"></button>
+    </header>
+    <section class="modal-card-body">
+        <form id="edit-form">
+            <p hidden id="update-task-id"></p>
+            <div class="field">
+                <label class="label" for="update-task-name">Task Name:</label>
+                <div class="control">
+                    <input class="input" type="text" placeholder="Task Name, e.g.: Essay" name="task-name" id="update-task-name">
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label" for="update-due-date">Due Date:</label>
+                <div class="control">
+                    <input class="input" type="text" placeholder="Deadline, e.g.: 2022-09-01" name="due-date" id="update-due-date">
+                </div>
+                <p class="help">You must follow exactly the YYYY-MM-DD format. The program doesn't do error-checking!</p>
+            </div>
+        </form>
+    </section>
+    <footer class="modal-card-foot">
+        <button class="button is-success" id="edit-new-task">Update the Task</button>
+        <button class="button" data-bulma-modal="close">Cancel</button>
+    </footer>
+    </div>
+</div>
+
 
 {% endblock %}
